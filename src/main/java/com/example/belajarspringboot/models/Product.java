@@ -2,6 +2,7 @@ package com.example.belajarspringboot.models;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Table(name = "mst_product")
+@ToString
 public class Product extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

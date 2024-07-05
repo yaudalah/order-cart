@@ -1,21 +1,25 @@
 package com.example.belajarspringboot.Validators;
 
+import com.example.belajarspringboot.models.DTO.OrderCartDTO;
 import com.example.belajarspringboot.models.OrderCart;
 import com.example.belajarspringboot.models.OrderItem;
 import com.example.belajarspringboot.models.Product;
+import com.example.belajarspringboot.repositories.OrderCartRepository;
 import com.example.belajarspringboot.repositories.ProductRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderValidator {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final OrderCartRepository orderCartRepository;
 
     public void validateAndAddProductToCart(OrderItem orderItem, OrderCart cart) {
         Optional<Product> productOpt = productRepository.findById(orderItem.getProduct().getId());
@@ -53,6 +57,16 @@ public class OrderValidator {
             product.setStock(product.getStock() - item.getQuantity());
             productRepository.save(product);
         }
+    }
+
+    public OrderCartDTO fetchOrderCartByUserId(UUID userId) {
+        OrderCart orderCart = orderCartRepository.findByUserUserId(userId)
+                .orElseThrow(() -> new ServiceException("Cart not found"));
+        OrderCartDTO orderCartDTO = new OrderCartDTO();
+        orderCartDTO.setId(orderCart.getId());
+        orderCartDTO.setUserId(orderCart.getUser().getUserId());
+        orderCartDTO.setItems(orderCart.getItems());
+        return orderCartDTO;
     }
 }
 

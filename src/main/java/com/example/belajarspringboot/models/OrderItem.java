@@ -3,6 +3,7 @@ package com.example.belajarspringboot.models;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -19,6 +20,7 @@ public class OrderItem {
     @ManyToOne
     private Product product;
 
+    @NotNull
     private int quantity;
 }
 
