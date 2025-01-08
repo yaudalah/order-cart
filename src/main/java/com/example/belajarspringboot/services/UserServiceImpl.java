@@ -10,29 +10,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserDetailsService {
+public class UserServiceImpl {
 
     private final UserRepository userRepository;
     private final AuthenticationServiceImpl authenticationService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ServiceException("Invalid credentials."));
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
-    }
 
     public SuccessApiResponse<Object> register(User req) {
         userRepository.findByUsername(req.getUsername()).ifPresent(existingUser -> {
@@ -57,9 +54,8 @@ public class UserServiceImpl implements UserDetailsService {
                 .build();
     }
 
-    public UserResDTO login(String loginId, UserLoginReqDTO user) {
-        log.info("login id: {}", loginId);
-        log.info("User try {} logged in.", user.getUsername());
+    public UserResDTO login(UserLoginReqDTO user) {
+        log.info("User {} try logged in.", user.getUsername());
         authenticationService.authenticate(user.getUsername(), user.getPassword());
 
         final UserDetails userDetails = loadUserByUsername(user.getUsername());
@@ -70,4 +66,20 @@ public class UserServiceImpl implements UserDetailsService {
                 .username(user.getUsername())
                 .build();
     }
+
+    public User getUserLogin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findUserByUsername(username);
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .build();
+    }
+
 }

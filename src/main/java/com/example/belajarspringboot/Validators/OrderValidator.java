@@ -43,12 +43,12 @@ public class OrderValidator {
             throw new ServiceException("Cart is empty, cannot place order.");
         }
 
-        for (OrderItem item : cart.getItems()) {
+        cart.getItems().forEach(item -> {
             Product product = item.getProduct();
             if (product.getStock() < item.getQuantity()) {
                 throw new ServiceException("Not enough stock for product: " + product.getName());
             }
-        }
+        });
     }
 
     public void reduceStock(OrderCart cart) {

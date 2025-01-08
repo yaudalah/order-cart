@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -24,8 +24,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestHeader("login-id") String username, @Valid @RequestBody UserLoginReqDTO user) {
-        return ResponseEntity.ok(userService.login(username, user));
+    public ResponseEntity<Object> login(@Valid @RequestBody UserLoginReqDTO user) {
+        return ResponseEntity.ok(userService.login(user));
     }
 
 }

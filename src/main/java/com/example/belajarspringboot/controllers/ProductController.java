@@ -41,16 +41,12 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
-        return productService.update(id, productDetails)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Product updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
+        return productService.update(id, productDetails);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteProduct(@PathVariable Long id) {
-        return productService.delete(id)
-                .map(entity -> ResponseEntity.ok().build())
-                .orElse(ResponseEntity.notFound().build());
+    public void deleteProduct(@PathVariable Long id) {
+        productService.delete(id);
     }
 }

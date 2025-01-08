@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 @Service
@@ -19,14 +21,25 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
 
+    @Value("${order.date.pattern}")
+    private String datePattern;
+
     @Async
     public void sendOrderConfirmationToEmail(Order order, String buyerEmail) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(buyerEmail);
-        message.setSubject("Order Confirmation - Order #" + order.getId());
+        message.setSubject(getEmailSubject(order));
         message.setText(emailMessage(order).toString());
         javaMailSender.send(message);
         log.info("Order confirmation sent for order id: {}", order.getId());
+    }
+
+    private String getEmailSubject(Order order) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern);
+
+        String formattedDate = now.format(formatter);
+        return "ORD-" + order.getId() + formattedDate; // Example: ORD-13124 and todo this should be save in table as a refId
     }
 
     private static StringBuilder emailMessage(Order order) {
@@ -35,7 +48,7 @@ public class EmailService {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Thank you for your order! Your order ID is ");
-        stringBuilder.append(order.getId());
+        stringBuilder.append(order.getId()); // todo refactor use refId
         stringBuilder.append(".\n");
         stringBuilder.append("Total: ");
         stringBuilder.append(formattedTotal);

@@ -9,4 +9,5 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends BaseRepository<User, UUID> {
     Optional<User> findByUsername(String userName);
+    User findUserByUsername(String userName);
 }

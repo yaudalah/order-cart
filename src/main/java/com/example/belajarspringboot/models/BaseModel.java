@@ -3,10 +3,11 @@ package com.example.belajarspringboot.models;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import java.time.Instant;
 import java.util.Date;
 
 @MappedSuperclass
@@ -14,18 +15,19 @@ import java.util.Date;
 @Setter
 public class BaseModel {
     @Column(nullable = false)
-    private Date createDateTime;
+    private Instant createDateTime;
+
     @Column(nullable = false)
-    private Date updateDateTime;
+    private Instant updateDateTime;
 
     @PrePersist
     protected void onCreate() {
-        this.createDateTime = new Date();
+        this.createDateTime = new Date().toInstant();
         this.updateDateTime = this.createDateTime;
     }
 
     @PreUpdate
     private void onUpdate() {
-        this.updateDateTime = new Date();
+        this.updateDateTime = new Date().toInstant();
     }
 }
