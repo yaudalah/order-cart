@@ -98,7 +98,7 @@ public class OrderService extends BaseService<Order, Long> {
             cart.getItems().clear();
             orderCartRepository.save(cart); // Persist the empty cart
             emailService.sendOrderConfirmationToEmail(order, user.getEmail());
-            // handle if send email failed
+            // todo handle if send email failed
             return SuccessApiResponse.builder()
                     .status(HttpStatus.CREATED.value())
                     .message(HttpStatus.CREATED.getReasonPhrase())
