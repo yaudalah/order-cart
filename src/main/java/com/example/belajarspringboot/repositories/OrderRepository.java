@@ -8,6 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface OrderRepository extends BaseRepository<Order, Long> {
-    List<Order> findByUserId(UUID userId);
+    List<Order> findByUserId(String userId);
 }
 

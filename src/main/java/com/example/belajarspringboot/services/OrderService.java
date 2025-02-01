@@ -1,35 +1,24 @@
 package com.example.belajarspringboot.services;
 
 import com.example.belajarspringboot.Validators.OrderValidator;
-import com.example.belajarspringboot.models.DTO.SuccessApiResponse;
-import com.example.belajarspringboot.models.DTO.SuccessListApiResponse;
 import com.example.belajarspringboot.models.Order;
 import com.example.belajarspringboot.models.OrderCart;
 import com.example.belajarspringboot.models.OrderItem;
 import com.example.belajarspringboot.models.User;
+import com.example.belajarspringboot.models.dto.SuccessApiResponse;
+import com.example.belajarspringboot.models.dto.SuccessListApiResponse;
 import com.example.belajarspringboot.repositories.OrderCartRepository;
 import com.example.belajarspringboot.repositories.OrderRepository;
-import com.example.belajarspringboot.repositories.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
-import java.nio.file.attribute.UserPrincipal;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import static com.example.belajarspringboot.models.Constants.PLACED;
 
@@ -59,7 +48,7 @@ public class OrderService extends BaseService<Order, Long> {
         existingEntity.getItems().addAll(entityDetails.getItems());
     }
 
-    public SuccessListApiResponse<Object> getOrdersByUserId(UUID userId) {
+    public SuccessListApiResponse<Object> getOrdersByUserId(String userId) {
         return SuccessListApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .data(Collections.singletonList(orderRepository.findByUserId(userId)))

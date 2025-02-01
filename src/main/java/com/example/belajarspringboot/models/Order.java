@@ -26,6 +26,6 @@ public class Order extends BaseModel {
 
     private BigDecimal total;
 
-    private UUID userId;
+    private String userId;
 }
 

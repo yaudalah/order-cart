@@ -1,10 +1,9 @@
 package com.example.belajarspringboot.controllers;
 
-import com.example.belajarspringboot.models.DTO.SuccessApiResponse;
+import com.example.belajarspringboot.models.dto.SuccessApiResponse;
 import com.example.belajarspringboot.models.Product;
 import com.example.belajarspringboot.services.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +12,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/products")
-@CrossOrigin
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/")
-    public Page<Product> getAllProducts(Pageable pageable) {
+    public SuccessApiResponse<Object> getAllProducts(Pageable pageable) {
         return productService.getAll(pageable);
     }
 
@@ -30,12 +28,12 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/create")
+    @PostMapping("create")
     public SuccessApiResponse<Object> createProduct(@RequestBody Product product) {
         return productService.create(product);
     }
 
-    @PostMapping("/create-many")
+    @PostMapping("create-many")
     public List<Product> createManyProduct(@RequestBody List<Product> product) {
         return productService.bulkInsert(product);
     }

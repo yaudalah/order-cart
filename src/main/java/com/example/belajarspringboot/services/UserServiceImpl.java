@@ -1,8 +1,8 @@
 package com.example.belajarspringboot.services;
 
-import com.example.belajarspringboot.models.DTO.SuccessApiResponse;
-import com.example.belajarspringboot.models.DTO.UserLoginReqDTO;
-import com.example.belajarspringboot.models.DTO.UserResDTO;
+import com.example.belajarspringboot.models.dto.SuccessApiResponse;
+import com.example.belajarspringboot.models.dto.UserLoginReqDTO;
+import com.example.belajarspringboot.models.dto.UserResDTO;
 import com.example.belajarspringboot.models.User;
 import com.example.belajarspringboot.repositories.UserRepository;
 import com.example.belajarspringboot.security.jwt.JwtUtil;
@@ -50,16 +50,22 @@ public class UserServiceImpl {
                 .build();
     }
 
-    public UserResDTO login(UserLoginReqDTO user) {
+    public SuccessApiResponse<Object> login(UserLoginReqDTO user) {
         log.info("User {} try logged in.", user.getUsername());
         authenticationService.authenticate(user.getUsername(), user.getPassword());
 
         final UserDetails userDetails = loadUserByUsername(user.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
 
-        return UserResDTO.builder()
+        final UserResDTO buildData = UserResDTO.builder()
                 .token(jwt)
                 .username(user.getUsername())
+                .build();
+
+        return SuccessApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Success Login")
+                .data(buildData)
                 .build();
     }
 

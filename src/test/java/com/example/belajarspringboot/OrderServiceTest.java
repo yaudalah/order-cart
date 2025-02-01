@@ -1,8 +1,8 @@
 package com.example.belajarspringboot;
 
 import com.example.belajarspringboot.Validators.OrderValidator;
-import com.example.belajarspringboot.models.DTO.SuccessApiResponse;
-import com.example.belajarspringboot.models.DTO.SuccessListApiResponse;
+import com.example.belajarspringboot.models.dto.SuccessApiResponse;
+import com.example.belajarspringboot.models.dto.SuccessListApiResponse;
 import com.example.belajarspringboot.models.Order;
 import com.example.belajarspringboot.models.OrderCart;
 import com.example.belajarspringboot.models.OrderItem;
@@ -59,9 +59,12 @@ class OrderServiceTest {
     @InjectMocks
     private OrderService orderService;
 
+    private String userId;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        userId = UUID.randomUUID().toString().replace("-", "").toUpperCase();
     }
 
     @Test
@@ -80,7 +83,6 @@ class OrderServiceTest {
 
     @Test
     void testGetOrdersByUserId() {
-        UUID userId = UUID.randomUUID();
         when(orderRepository.findByUserId(userId)).thenReturn(new ArrayList<>());
 
         SuccessListApiResponse<Object> response = orderService.getOrdersByUserId(userId);
@@ -95,7 +97,7 @@ class OrderServiceTest {
         final String email = "testuser@gmail.com";
         final String username = "testuser";
         User mockUser = new User();
-        mockUser.setUserId(UUID.randomUUID());
+        mockUser.setUserId(userId);
         mockUser.setEmail(email);
 
         // Mock SecurityContext and Authentication

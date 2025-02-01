@@ -1,6 +1,7 @@
 package com.example.belajarspringboot.security.jwt;
 
 import com.example.belajarspringboot.services.AuthenticationServiceImpl;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authorizationHeader.substring(7);
             try {
                 username = jwtTokenUtil.extractUsername(jwt);
-            } catch (Exception e) {
+            } catch (MalformedJwtException e) {
                 log.error("Error extracting username from token: {}", e.getMessage());
             }
         }

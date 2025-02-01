@@ -1,16 +1,15 @@
-package com.example.belajarspringboot.models.DTO;
+package com.example.belajarspringboot.models.dto;
 
 import com.example.belajarspringboot.models.OrderItem;
 import lombok.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class OrderCartDTO {
     private Long id;
-    private UUID userId;
+    private String userId;
     private List<OrderItem> items;
 }

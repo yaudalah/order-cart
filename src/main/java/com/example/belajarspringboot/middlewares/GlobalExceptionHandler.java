@@ -1,6 +1,6 @@
 package com.example.belajarspringboot.middlewares;
 
-import com.example.belajarspringboot.models.DTO.ErrorApiResponse;
+import com.example.belajarspringboot.models.dto.ErrorApiResponse;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

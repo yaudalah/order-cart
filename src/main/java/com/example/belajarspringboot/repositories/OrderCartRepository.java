@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface OrderCartRepository extends BaseRepository<OrderCart, Long> {
-    Optional<OrderCart> findByUserUserId(@Param("userId") UUID userId);
+    Optional<OrderCart> findByUserUserId(@Param("userId") String userId);
 }

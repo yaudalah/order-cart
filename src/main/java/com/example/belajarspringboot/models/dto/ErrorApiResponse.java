@@ -1,4 +1,4 @@
-package com.example.belajarspringboot.models.DTO;
+package com.example.belajarspringboot.models.dto;
 
 import lombok.Getter;
 import lombok.Setter;

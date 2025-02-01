@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -23,13 +24,8 @@ import java.util.UUID;
 @Builder
 public class User extends BaseModel {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "user_id", updatable = false, nullable = false, length = 36)
-    private UUID userId;
+    @Column(name = "id", updatable = false, nullable = false, length = 36)
+    private String userId;
 
     @Column(name = "username", length = 25, unique = true, nullable = false)
     @NotBlank(message = "The username must not be empty.")
@@ -48,16 +44,20 @@ public class User extends BaseModel {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "join_date", nullable = false)
     @JsonIgnore
-    private Instant joinDate;
+    private LocalDateTime joinDate;
 
     @Column(name = "password", nullable = false)
     @NotBlank
     @Size(min = 8, message = "Password minimum has to be greater than 8 characters.")
     private String password;
 
+
     @Override
     protected void onCreate() {
         super.onCreate();
-        joinDate = Instant.now();
+        if (userId == null || userId.isEmpty()) {
+            userId = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+        }
+        joinDate = LocalDateTime.now();
     }
 }

@@ -1,6 +1,6 @@
 package com.example.belajarspringboot.Validators;
 
-import com.example.belajarspringboot.models.DTO.OrderCartDTO;
+import com.example.belajarspringboot.models.dto.OrderCartDTO;
 import com.example.belajarspringboot.models.OrderCart;
 import com.example.belajarspringboot.models.OrderItem;
 import com.example.belajarspringboot.models.Product;
@@ -8,11 +8,11 @@ import com.example.belajarspringboot.repositories.OrderCartRepository;
 import com.example.belajarspringboot.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -59,14 +59,14 @@ public class OrderValidator {
         }
     }
 
-    public OrderCartDTO fetchOrderCartByUserId(UUID userId) {
+    public Page<Object> fetchOrderCartByUserId(String userId) {
         OrderCart orderCart = orderCartRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new ServiceException("Cart not found"));
         OrderCartDTO orderCartDTO = new OrderCartDTO();
         orderCartDTO.setId(orderCart.getId());
         orderCartDTO.setUserId(orderCart.getUser().getUserId());
         orderCartDTO.setItems(orderCart.getItems());
-        return orderCartDTO;
+        return (Page<Object>) orderCartDTO;
     }
 }
 

@@ -1,26 +1,29 @@
 package com.example.belajarspringboot.services;
 
-import com.example.belajarspringboot.models.DTO.SuccessApiResponse;
+import com.example.belajarspringboot.models.dto.SuccessApiResponse;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public abstract class BaseService<T, ID> {
     protected final JpaRepository<T, ID> repository;
 
-    public Page<T> getAll(Pageable pageable) {
-        return repository.findAll(pageable);
+    public SuccessApiResponse<Object> getAll(Pageable pageable) {
+        return SuccessApiResponse.builder()
+                .status(HttpStatus.FOUND.value())
+                .message("Success")
+                .data(repository.findAll(pageable))
+                .build();
     }
 
     public Optional<T> getById(ID id) {
@@ -29,7 +32,9 @@ public abstract class BaseService<T, ID> {
 
     @Transactional
     public SuccessApiResponse<Object> create(T entity) {
-        repository.save(entity);
+        if (repository != null) {
+            repository.save(entity);
+        }
         log.info("Successfully created entity: {}", entity);
         return SuccessApiResponse.builder()
                 .status(HttpStatus.CREATED.value())

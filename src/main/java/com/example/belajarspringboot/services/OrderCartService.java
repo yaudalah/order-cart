@@ -1,8 +1,9 @@
 package com.example.belajarspringboot.services;
 
 import com.example.belajarspringboot.Validators.OrderValidator;
-import com.example.belajarspringboot.models.DTO.SuccessApiResponse;
-import com.example.belajarspringboot.models.DTO.SuccessListApiResponse;
+import com.example.belajarspringboot.models.dto.OrderCartDTO;
+import com.example.belajarspringboot.models.dto.SuccessApiResponse;
+import com.example.belajarspringboot.models.dto.SuccessListApiResponse;
 import com.example.belajarspringboot.models.OrderCart;
 import com.example.belajarspringboot.models.OrderItem;
 import com.example.belajarspringboot.models.User;
@@ -10,12 +11,13 @@ import com.example.belajarspringboot.repositories.OrderCartRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import java.util.Collections;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -56,11 +58,12 @@ public class OrderCartService extends BaseService<OrderCart, Long> {
         }
     }
 
-    public SuccessListApiResponse<Object> getCartByUserId(UUID userId) {
+    public SuccessListApiResponse<Object> getCartByUserId(String userId) {
         try {
+            final List<Object> list = Collections.singletonList(orderValidator.fetchOrderCartByUserId(userId));
             return SuccessListApiResponse.builder()
                     .status(HttpStatus.OK.value())
-                    .data(Collections.singletonList(orderValidator.fetchOrderCartByUserId(userId)))
+                    .data(list)
                     .message(HttpStatus.OK.getReasonPhrase())
                     .build();
         } catch (ServiceException e) {
