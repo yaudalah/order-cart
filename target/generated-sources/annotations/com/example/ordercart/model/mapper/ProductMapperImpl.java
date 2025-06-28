@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-03T21:33:38+0700",
+    date = "2025-06-28T11:25:19+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -40,9 +40,28 @@ public class ProductMapperImpl implements ProductMapper {
 
         productResponse.price( product.getPrice() );
         productResponse.stock( product.getStock() );
+        productResponse.userId( product.getUserId() );
         productResponse.name( product.getName() );
         productResponse.description( product.getDescription() );
 
         return productResponse.build();
+    }
+
+    @Override
+    public void updateProductFromRequest(ProductRequest request, Product product) {
+        if ( request == null ) {
+            return;
+        }
+
+        if ( request.getName() != null ) {
+            product.setName( request.getName() );
+        }
+        if ( request.getDescription() != null ) {
+            product.setDescription( request.getDescription() );
+        }
+        if ( request.getPrice() != null ) {
+            product.setPrice( request.getPrice() );
+        }
+        product.setStock( request.getStock() );
     }
 }

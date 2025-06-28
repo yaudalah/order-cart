@@ -1,0 +1,66 @@
+package com.example.ordercart.service;
+
+import com.example.ordercart.entity.OrderCart;
+import com.example.ordercart.entity.OrderItem;
+import com.example.ordercart.entity.Product;
+import com.example.ordercart.entity.User;
+import com.example.ordercart.repository.OrderCartRepository;
+import com.example.ordercart.repository.OrderItemRepository;
+import com.example.ordercart.repository.ProductRepository;
+import com.example.ordercart.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class OrderCartService {
+    private final OrderCartRepository orderCartRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final UserService userService;
+
+    @Transactional
+    public String addProductsToCart(OrderItem orderItem) {
+        log.info("[OrderCartService] Checking if order item is valid: {}", orderItem);
+        if (orderItem == null || orderItem.getProduct() == null || orderItem.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Invalid order item details provided");
+        }
+
+        final UUID userId = userService.fetchUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
+        final User userProxy = userRepository.getReferenceById(userId);
+
+        OrderCart cart = orderCartRepository
+                .findOrderCartByUserId(userId)
+                .orElseGet(() -> {
+                    log.info("[OrderCartService] No existing cart found for user {}, creating a new one", userId);
+                    return orderCartRepository.save(
+                            OrderCart.builder()
+                                    .user(userProxy)
+                                    .build()
+                    );
+                });
+
+        Product product = productRepository.findById(orderItem.getProduct().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+        OrderItem item = OrderItem.builder()
+                .orderCartId(cart.getId())
+                .product(product)
+                .quantity(orderItem.getQuantity())
+                .build();
+
+        log.info("[OrderCartService] START Adding item to cart: {}", item);
+        orderItemRepository.save(item);
+
+        return "Item added successfully";
+    }
+
+}

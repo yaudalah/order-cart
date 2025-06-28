@@ -9,8 +9,6 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.Instant;
-
 @Getter
 @Setter
 @Builder
@@ -23,7 +21,7 @@ public class ApiResponse {
     private Object data;
 
     @Builder.Default
-    private long timestamp = Instant.now().toEpochMilli();
+    private long timestamp = System.currentTimeMillis();
 
     // SUCCESS without data
     public static ResponseEntity<ApiResponse> ok() {
@@ -46,8 +44,7 @@ public class ApiResponse {
 
     // FAILED with message
     public static ResponseEntity<ApiResponse> failed(String message) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(buildFailed(message));
+        return ResponseEntity.ok(buildFailed(message));
     }
 
     // FAILED with custom status code

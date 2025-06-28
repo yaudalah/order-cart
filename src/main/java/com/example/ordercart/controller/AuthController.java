@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+import static com.example.ordercart.common.constant.UrlPathsConstant.AUTH;
+import static com.example.ordercart.common.constant.UrlPathsConstant.AUTH_REFRESH;
+import static com.example.ordercart.common.constant.UrlPathsConstant.URL_PREFIX_V1;
+
 @RestController
-@RequestMapping("/v1/auth")
+@RequestMapping(URL_PREFIX_V1 + AUTH)
 public class AuthController {
 
     private final JwtUtil jwtUtil;
@@ -24,7 +28,7 @@ public class AuthController {
         this.userDetailsService = userDetailsService;
     }
 
-    @PostMapping("/refresh")
+    @PostMapping(AUTH_REFRESH)
     public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> body) {
         String refreshToken = body.get("refreshToken");
 

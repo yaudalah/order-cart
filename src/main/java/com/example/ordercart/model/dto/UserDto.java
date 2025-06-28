@@ -1,6 +1,7 @@
 package com.example.ordercart.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,13 +10,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
+    private UUID id;
     @NotBlank(message = "The username must not be empty.")
     private String username;
     @Email
@@ -25,6 +28,6 @@ public class UserDto {
     @NotNull(message = "Phone Number is Mandatory")
     private String phoneNumber;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-    private LocalDateTime joinDate;
+    private String joinDate;
     private List<String> exportedColumn;
 }

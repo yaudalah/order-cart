@@ -15,11 +15,13 @@ import lombok.Setter;
 
 import java.util.List;
 
+import static com.example.ordercart.common.constant.TblConstant.TBL_TXN_ORDER_CART;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "tbl_txn_order_cart")
+@Table(name = TBL_TXN_ORDER_CART)
 @AllArgsConstructor
 @Builder
 public class OrderCart extends BaseEntity {

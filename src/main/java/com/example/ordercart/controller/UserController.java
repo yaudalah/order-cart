@@ -5,7 +5,7 @@ import com.example.ordercart.model.dto.UserDto;
 import com.example.ordercart.model.request.UserLoginReq;
 import com.example.ordercart.model.response.ApiResponse;
 import com.example.ordercart.service.CsvExportService;
-import com.example.ordercart.service.UserServiceImpl;
+import com.example.ordercart.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import static com.example.ordercart.common.constant.UrlPathsConstant.URL_PREFIX_V1;
+import static com.example.ordercart.common.constant.UrlPathsConstant.USER;
+
 @RestController
-@RequestMapping("v1/user")
+@RequestMapping(URL_PREFIX_V1 + USER)
 @RequiredArgsConstructor
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final CsvExportService csvExportService;
 
     @PostMapping("register")

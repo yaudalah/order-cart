@@ -43,6 +43,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 username = jwtTokenUtil.extractUsername(jwt);
             } catch (MalformedJwtException e) {
                 log.error("Error extracting username from token: {}", e.getMessage());
+                throw new ServletException("Error extracting username from token. ", e);
             }
         }
 

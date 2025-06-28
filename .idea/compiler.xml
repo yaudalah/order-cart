@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="BelajarSpringBoot" />
         <module name="TestInterview" />
+        <module name="invoice-cart" />
       </profile>
     </annotationProcessing>
   </component>
@@ -16,6 +17,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="BelajarSpringBoot" options="-parameters" />
       <module name="TestInterview" options="-parameters" />
+      <module name="invoice-cart" options="-parameters" />
     </option>
   </component>
 </project>

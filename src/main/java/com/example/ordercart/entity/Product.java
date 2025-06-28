@@ -8,11 +8,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.UUID;
+
+import static com.example.ordercart.common.constant.TblConstant.TBL_MST_PRODUCT;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "tbl_mst_product")
+@Table(name = TBL_MST_PRODUCT)
 @ToString
 public class Product extends BaseEntity {
     @Column(name = "name", nullable = false)
@@ -23,6 +26,8 @@ public class Product extends BaseEntity {
     private BigDecimal price;
     @Column(name = "stock")
     private int stock;
+    @Column(name = "user_id")
+    private UUID userId;
 
     @Override
     protected void onCreate() {
