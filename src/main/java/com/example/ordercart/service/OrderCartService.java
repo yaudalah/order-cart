@@ -4,6 +4,7 @@ import com.example.ordercart.entity.OrderCart;
 import com.example.ordercart.entity.OrderItem;
 import com.example.ordercart.entity.Product;
 import com.example.ordercart.entity.User;
+import com.example.ordercart.exception.ServiceException;
 import com.example.ordercart.repository.OrderCartRepository;
 import com.example.ordercart.repository.OrderItemRepository;
 import com.example.ordercart.repository.ProductRepository;
@@ -57,8 +58,15 @@ public class OrderCartService {
                 .quantity(orderItem.getQuantity())
                 .build();
 
-        log.info("[OrderCartService] START Adding item to cart: {}", item);
-        orderItemRepository.save(item);
+        try {
+            log.info("[OrderCartService] START Adding item to cart: {}", item);
+            orderItemRepository.save(item);
+        } catch (Exception e) {
+            log.error("[OrderCartService] ERROR while adding item to cart: {}", e.getMessage());
+            throw new ServiceException(e.getMessage(), e);
+        } finally {
+            log.info("[OrderCartService] END Adding item to cart");
+        }
 
         return "Item added successfully";
     }
