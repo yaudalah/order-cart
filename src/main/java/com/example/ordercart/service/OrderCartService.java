@@ -12,10 +12,12 @@ import com.example.ordercart.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -71,4 +73,26 @@ public class OrderCartService {
         return "Item added successfully";
     }
 
+    public String getOrderCart(Pageable pageable) {
+        return "";
+    }
+
+    public String removeProductFromCart(List<UUID> productId) {
+        return "Product removed successfully";
+    }
+
+    public String clearOrderCart() {
+        final UUID userId = userService.fetchUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
+        OrderCart cart = orderCartRepository
+                .findOrderCartByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Order cart not found for user"));
+
+        // TODO: Consider using a bulk delete operation for better performance and also handle cascade delete
+//        orderItemRepository.deleteAllByOrderCartId(cart.getId());
+        return "Order cart cleared successfully";
+    }
+
+    public String checkoutOrderCart() {
+        return null;
+    }
 }

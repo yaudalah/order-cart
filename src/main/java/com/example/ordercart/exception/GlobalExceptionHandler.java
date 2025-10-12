@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public static ResponseEntity<ApiResponse> handleValidationException(Exception ex) {
-        log.error(ex.getMessage(), ex);
-        return ApiResponse.failed(ex.getMessage());
+    @ExceptionHandler(ServiceException.class)
+    public static ResponseEntity<ApiResponse> handleServiceException(ServiceException ex) {
+        return handleValidationException(ex);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -29,7 +28,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
-    public static ResponseEntity<ApiResponse> expiredJwtException(Exception ex) {
+    public static ResponseEntity<ApiResponse> expiredJwtException(ExpiredJwtException ex) {
         return handleValidationException(ex);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public static ResponseEntity<ApiResponse> Exception(Exception ex) {
+        return handleValidationException(ex);
+    }
+
+    private static ResponseEntity<ApiResponse> handleValidationException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return ApiResponse.failed(ex.getMessage());
     }
 }

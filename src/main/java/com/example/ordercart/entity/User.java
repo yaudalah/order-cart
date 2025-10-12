@@ -1,7 +1,10 @@
 package com.example.ordercart.entity;
 
+import com.example.ordercart.common.enums.IsLockedEnum;
+import com.example.ordercart.model.converter.IsLockedEnumConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -43,6 +46,13 @@ public class User extends BaseEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "retry", nullable = false, columnDefinition = "smallint default 0")
+    private int retry;
+
+    @Column(name = "is_locked", nullable = false)
+    @Convert(converter = IsLockedEnumConverter.class)
+    private IsLockedEnum isLocked;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id")
     private List<Invoice> invoices;
@@ -55,5 +65,7 @@ public class User extends BaseEntity {
     protected void onCreate() {
         super.onCreate();
         joinDate = LocalDateTime.now();
+        isLocked = IsLockedEnum.UNLOCKED;
+        retry = 0;
     }
 }
